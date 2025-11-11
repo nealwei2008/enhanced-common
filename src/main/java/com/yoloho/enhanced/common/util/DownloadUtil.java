@@ -1,5 +1,10 @@
 package com.yoloho.enhanced.common.util;
 
+import com.yoloho.enhanced.common.util.DigestUtil.Algorithm;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -8,13 +13,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.concurrent.Callable;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.yoloho.enhanced.common.util.DigestUtil;
-import com.yoloho.enhanced.common.util.StringUtil;
-import com.yoloho.enhanced.common.util.DigestUtil.Algorithm;
 
 /**
  * 去掉spring-retry依赖，带重试的下载文件到本地工具

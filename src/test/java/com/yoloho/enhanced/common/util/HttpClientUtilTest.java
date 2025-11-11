@@ -16,7 +16,6 @@ import org.junit.Test;
 
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
-import com.yoloho.enhanced.common.util.HttpClientUtil;
 import com.yoloho.enhanced.common.util.HttpClientUtil.Callback;
 
 public class HttpClientUtilTest {

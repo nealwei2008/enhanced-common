@@ -7,12 +7,12 @@
     <parent>
         <groupId>com.yoloho.enhanced.parent</groupId>
         <artifactId>enhanced-parent</artifactId>
-        <version>1.0.0</version>
+        <version>1.1.0</version>
     </parent>
     <groupId>com.yoloho.enhanced</groupId>
     <artifactId>enhanced-common</artifactId>
     <name>enhanced-common</name>
-    <version>1.0.3</version>
+    <version>1.1.0</version>
     <url>https://github.com/yoloho/enhanced-common</url>
 
     <licenses>
@@ -34,6 +34,11 @@
     </scm>
 
     <dependencies>
+        <dependency>
+            <groupId>javax.annotation</groupId>
+            <artifactId>javax.annotation-api</artifactId>
+            <version>1.3.2</version>
+        </dependency>
         <!-- commons -->
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -65,7 +70,6 @@
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpasyncclient</artifactId>
-            <version>4.1.3</version>
             <exclusions>
                 <exclusion>
                     <groupId>commons-logging</groupId>
@@ -142,7 +146,9 @@
                             <goal>jar</goal>
                         </goals>
                         <configuration>
-                            <additionalparam>-Xdoclint:none</additionalparam>
+                            <skip>true</skip>
+                            <!-- 禁用严格的语法检查 -->
+                            <doclint>none</doclint>
                         </configuration>
                     </execution>
                 </executions>

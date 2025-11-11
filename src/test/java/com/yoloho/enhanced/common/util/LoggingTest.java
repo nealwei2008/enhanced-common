@@ -5,9 +5,6 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.yoloho.enhanced.common.util.Logging;
-import com.yoloho.enhanced.common.util.RandomUtil;
-
 /**
  * 日志测试类，目前作为单元测试先禁用
  * 

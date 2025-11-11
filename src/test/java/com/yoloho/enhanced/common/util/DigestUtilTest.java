@@ -1,16 +1,14 @@
 package com.yoloho.enhanced.common.util;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileWriter;
-import java.io.IOException;
+import com.yoloho.enhanced.common.util.DigestUtil.Algorithm;
 
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.yoloho.enhanced.common.util.DigestUtil;
-import com.yoloho.enhanced.common.util.StringUtil;
-import com.yoloho.enhanced.common.util.DigestUtil.Algorithm;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
 
 /**
  * @author jason

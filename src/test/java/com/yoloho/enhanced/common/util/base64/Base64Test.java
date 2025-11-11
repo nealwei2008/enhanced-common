@@ -2,8 +2,6 @@ package com.yoloho.enhanced.common.util.base64;
 
 import org.junit.Test;
 
-import com.yoloho.enhanced.common.util.base64.Base64Util;
-
 public class Base64Test {
 
 	@Test

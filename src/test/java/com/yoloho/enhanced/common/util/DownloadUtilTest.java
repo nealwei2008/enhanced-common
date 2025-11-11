@@ -7,8 +7,6 @@ import java.io.IOException;
 
 import org.junit.Test;
 
-import com.yoloho.enhanced.common.util.DownloadUtil;
-
 public class DownloadUtilTest {
     @Test
     public void testDownloadAndVerify() {

@@ -64,7 +64,7 @@ import com.yoloho.enhanced.common.annotation.NonNull;
  * http访问的工具类
  *
  * @author wuzl
- * @date Feb 28, 2014 9:43:40 AM
+ * @since Feb 28, 2014 9:43:40 AM
  * @comment
  */
 public class HttpClientUtil {
@@ -181,7 +181,7 @@ public class HttpClientUtil {
      * @param url
      * @param visitCout
      * @return
-     * @date Feb 28, 2014 9:47:04 AM
+     * @since Feb 28, 2014 9:47:04 AM
      * @author wuzl
      * @comment如果visitcount 小于0一直访问知道1w次
      */

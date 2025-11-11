@@ -3,8 +3,6 @@ package com.yoloho.enhanced.common.util.aes;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.yoloho.enhanced.common.util.aes.AESUtil;
-
 public class AESUtilTest {
     @Test
     public void encryptTest() {

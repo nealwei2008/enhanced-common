@@ -3,8 +3,6 @@ package com.yoloho.enhanced.common.util;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.yoloho.enhanced.common.util.NumberUtil;
-
 /**
  * @author jason
  *
