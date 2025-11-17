@@ -28,6 +28,10 @@
             <organization>yoloho</organization>
             <organizationUrl>https://www.yoloho.com</organizationUrl>
         </developer>
+        <developer>
+            <name>neal</name>
+            <email>neal_wei2008@163.com</email>
+        </developer>
     </developers>
     <scm>
         <url>https://github.com/yoloho/enhanced-common</url>
