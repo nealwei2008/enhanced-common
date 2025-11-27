@@ -70,6 +70,7 @@ import com.yoloho.enhanced.common.annotation.NonNull;
 public class HttpClientUtil {
     private static final Logger log = LoggerFactory.getLogger(HttpClientUtil.class.getSimpleName());
     private static String customUserAgent = "Apache-HttpClient/4.5.5 (Java/1.7.0_79)";
+    private static String EXP_MESSAGE = "HTTP服务异常:%s; HttpStatus=%d; Response=%s";
     /**
      * 60秒内连接可垂用
      */
@@ -561,11 +562,11 @@ public class HttpClientUtil {
                     return EntityUtils.toString(response.getEntity());
                 }
                 if (response.getEntity() == null) {
-                    throw new RuntimeException("服务器异常稍后再试:" + request.getURI().toString() + "; httpStatus: "
-                            + response.getStatusLine().getStatusCode() + " ;response.getEntity()  is null ");
+                    throw new RuntimeException(String.format(EXP_MESSAGE, request.getURI().toString(),
+                            response.getStatusLine().getStatusCode(), "response.getEntity()  is null"));
                 }
-                throw new RuntimeException("服务器异常稍后再试:" + request.getURI().toString() + "; httpStatus:"
-                        + response.getStatusLine().getStatusCode() + " ; " + EntityUtils.toString(response.getEntity()));
+                throw new RuntimeException(String.format(EXP_MESSAGE, request.getURI().toString(),
+                        response.getStatusLine().getStatusCode(), EntityUtils.toString(response.getEntity())));
             }
             return EntityUtils.toString(response.getEntity(), defaultCharset);
         } catch (ParseException | IOException e) {

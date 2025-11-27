@@ -2,6 +2,7 @@ package com.yoloho.enhanced.common.util;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.ServiceLoader;
 import java.util.Map.Entry;
 
 import org.apache.commons.lang3.StringUtils;
@@ -216,6 +217,31 @@ public class Logging {
                     appenderRefs.toArray(new AppenderRef[] {}), null, config, null);
             config.addLogger("RocketmqClient", loggerConfig);
             config.addLogger("RocketmqRemoting", loggerConfig);
+        }
+        {
+            LoggerConfig loggerConfig = LoggerConfig.createLogger(false, Level.WARN, "ONSLogger", null,
+                    appenderRefs.toArray(new AppenderRef[] {}), null, config, null);
+            config.addLogger("RocketmqClient", loggerConfig);
+            config.addLogger("RocketmqRemoting", loggerConfig);
+        }
+        {
+            ServiceLoader<LoggerAppender> serviceLoader = ServiceLoader.load(LoggerAppender.class);
+            if(serviceLoader != null){
+                Iterator<LoggerAppender> itor = serviceLoader.iterator();
+                while(itor.hasNext()){
+                    LoggerAppender curLogAppender = itor.next();
+                    if(curLogAppender.getLogger()!=null || curLogAppender.getLogger().size()>0){
+                        LoggerConfig customLogConfig = LoggerConfig.createLogger(curLogAppender.getAdditivity(), curLogAppender.getLogLevel(),
+                                                        curLogAppender.getLoggerName(), curLogAppender.getIncludeLocation(),
+                                                        appenderRefs.toArray(new AppenderRef[]{}),curLogAppender.getProperties(),
+                                                        config, curLogAppender.getFilter());
+                        for(String loggerPattern : curLogAppender.getLogger()){
+                            config.addLogger(loggerPattern, customLogConfig);
+                            System.out.println("加载自定义日志Logger: LoggerPattern="+loggerPattern+", LogLevel="+curLogAppender.getLogLevel());
+                        }
+                    }
+                }
+            }
         }
         ctx.updateLoggers();
         inited = true;

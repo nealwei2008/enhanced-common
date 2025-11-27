@@ -34,7 +34,8 @@
         </developer>
     </developers>
     <scm>
-        <url>https://github.com/yoloho/enhanced-common</url>
+        <!--<url>https://github.com/yoloho/enhanced-common</url>-->
+        <url>https://github.com/nealwei2008/enhanced-common</url>
     </scm>
 
     <dependencies>
