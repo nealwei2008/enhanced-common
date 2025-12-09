@@ -139,7 +139,7 @@ public class Logging {
          * 设置默认level为info 这里未来可以设置几个可选的输入覆盖方式
          */
         config.getRootLogger().setLevel(Level.toLevel(defaultLevel));
-        PatternLayout layout = PatternLayout.newBuilder().withPattern("%d %-5p %c{1.} [%t] %m%n")
+        PatternLayout layout = PatternLayout.newBuilder().withPattern("%d %highlight{%-5p} %style{%c{1.}}{cyan} [%t] %m%n")
                 .withConfiguration(config).build();
         DefaultRolloverStrategy defaultRolloverStrategy = null;
         try {
