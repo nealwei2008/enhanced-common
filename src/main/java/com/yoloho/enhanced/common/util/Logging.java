@@ -109,7 +109,6 @@ public class Logging {
         
     }
 
-    @SuppressWarnings("deprecation")
     public static void initLogging(boolean console, boolean file) {
         //for rocketmq
         System.setProperty("rocketmq.client.log.loadconfig", "false");
@@ -148,16 +147,17 @@ public class Logging {
                     .withMax("10")
                     .build();
         } catch (Exception e) {
-            //old version
-            defaultRolloverStrategy = DefaultRolloverStrategy.createStrategy("10", null, null, null, null, false, config);
+            //old version, 可能版本小于 2.8
+            logger.error("DefaultRolloverStrategy create failed ", e);
+            return;
         }
         // console
         if (console) {
 
             @SuppressWarnings(value = {"rawtypes", "unchecked"})
             ConsoleAppender.Builder<?> builder = ConsoleAppender.<ConsoleAppender.Builder> newBuilder();
-            Appender appenderConsole = builder.withName("STDOUT").withImmediateFlush(true)
-                    .withBufferedIo(true).withBufferSize(1024).withLayout(layout).build();
+            Appender appenderConsole = builder.setName("STDOUT").setImmediateFlush(true)
+                    .setBufferedIo(true).setBufferSize(1024).setLayout(layout).build();
             appenderConsole.start();
             config.getRootLogger().addAppender(appenderConsole, null, null);
             //for log4j < 2.8, just ignore currently
@@ -175,10 +175,10 @@ public class Logging {
             @SuppressWarnings(value = {"rawtypes", "unchecked"})
             RollingFileAppender.Builder<?> builder = RollingFileAppender.<RollingFileAppender.Builder> newBuilder();
 
-            Appender appenderNormal = builder.withName("NormalRollingFile")
+            Appender appenderNormal = builder.setName("NormalRollingFile")
                     .withFileName("logs/app.log").withFilePattern("logs/app-%i.log.gz").withLocking(false)
-                    .withImmediateFlush(true).withFilter(thresholdFilter).withPolicy(getPolicy())
-                    .withStrategy(defaultRolloverStrategy).withBufferedIo(true).withBufferSize(1024).withLayout(layout)
+                    .setImmediateFlush(true).setFilter(thresholdFilter).withPolicy(getPolicy())
+                    .withStrategy(defaultRolloverStrategy).setBufferedIo(true).setBufferSize(1024).setLayout(layout)
                     .build();
             appenderNormal.start();
             config.getRootLogger().addAppender(appenderNormal, null, null);
@@ -197,11 +197,11 @@ public class Logging {
             @SuppressWarnings(value = {"rawtypes", "unchecked"})
             RollingFileAppender.Builder<?> builder = RollingFileAppender.<RollingFileAppender.Builder> newBuilder();
 
-            Appender appenderError = builder.withName("ErrorRollingFile")
+            Appender appenderError = builder.setName("ErrorRollingFile")
                     .withFileName("logs/error.log").withFilePattern("logs/error-%i.log.gz").withLocking(false)
-                    .withImmediateFlush(true).withFilter(thresholdFilter).withPolicy(getPolicy())
-                    .withStrategy(defaultRolloverStrategy).withBufferedIo(true).withIgnoreExceptions(false)
-                    .withBufferSize(1024).withLayout(layout).build();
+                    .setImmediateFlush(true).setFilter(thresholdFilter).withPolicy(getPolicy())
+                    .withStrategy(defaultRolloverStrategy).setBufferedIo(true).setIgnoreExceptions(false)
+                    .setBufferSize(1024).setLayout(layout).build();
             appenderError.start();
             config.getRootLogger().addAppender(appenderError, null, null);
             //for log4j < 2.8, just ignore currently
@@ -213,14 +213,9 @@ public class Logging {
             }
         }
         {
-            LoggerConfig loggerConfig = LoggerConfig.createLogger(false, Level.WARN, "ONSLogger", null,
-                    appenderRefs.toArray(new AppenderRef[] {}), null, config, null);
-            config.addLogger("RocketmqClient", loggerConfig);
-            config.addLogger("RocketmqRemoting", loggerConfig);
-        }
-        {
-            LoggerConfig loggerConfig = LoggerConfig.createLogger(false, Level.WARN, "ONSLogger", null,
-                    appenderRefs.toArray(new AppenderRef[] {}), null, config, null);
+            LoggerConfig loggerConfig = LoggerConfig.newBuilder().withAdditivity(false).withLevel(Level.WARN)
+                    .withLoggerName("ONSLogger").withRefs(appenderRefs.toArray(new AppenderRef[] {})).withConfig(config)
+                    .build();
             config.addLogger("RocketmqClient", loggerConfig);
             config.addLogger("RocketmqRemoting", loggerConfig);
         }
@@ -231,10 +226,10 @@ public class Logging {
                 while(itor.hasNext()){
                     LoggerAppender curLogAppender = itor.next();
                     if(curLogAppender.getLogger()!=null || curLogAppender.getLogger().size()>0){
-                        LoggerConfig customLogConfig = LoggerConfig.createLogger(curLogAppender.getAdditivity(), curLogAppender.getLogLevel(),
-                                                        curLogAppender.getLoggerName(), curLogAppender.getIncludeLocation(),
-                                                        appenderRefs.toArray(new AppenderRef[]{}),curLogAppender.getProperties(),
-                                                        config, curLogAppender.getFilter());
+                        LoggerConfig customLogConfig = LoggerConfig.newBuilder().withAdditivity(curLogAppender.getAdditivity()).withLevel(curLogAppender.getLogLevel())
+                            .withLoggerName(curLogAppender.getLoggerName()).withIncludeLocation(curLogAppender.getIncludeLocation())
+                            .withRefs(appenderRefs.toArray(new AppenderRef[]{})).withProperties(curLogAppender.getProperties())
+                            .withConfig(config).withFilter(curLogAppender.getFilter()).build();
                         for(String loggerPattern : curLogAppender.getLogger()){
                             config.addLogger(loggerPattern, customLogConfig);
                             System.out.println("加载自定义日志Logger: LoggerPattern="+loggerPattern+", LogLevel="+curLogAppender.getLogLevel());
