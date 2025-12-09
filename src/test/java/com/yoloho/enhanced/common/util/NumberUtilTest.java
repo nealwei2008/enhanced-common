@@ -35,14 +35,14 @@ public class NumberUtilTest {
 	@Test
 	public void bytesToIpTest() {
 	    Assert.assertEquals(NumberUtil.bytesToIp((byte)0xff, (byte)0x01, (byte)0x10, (byte)0xff), "255.1.16.255");
-	    Assert.assertEquals(NumberUtil.bytesToIp(new Byte((byte) 0xff), new Byte((byte)0x01), new Byte((byte)0x10), new Byte((byte)0xff)), "255.1.16.255");
+	    Assert.assertEquals(NumberUtil.bytesToIp(Byte.valueOf((byte) 0xff), Byte.valueOf((byte)0x01), Byte.valueOf((byte)0x10), Byte.valueOf((byte)0xff)), "255.1.16.255");
 	    Assert.assertEquals(NumberUtil.bytesToIp(new Byte[]{(byte)0xff, (byte)0x01, (byte)0x10, (byte)0xff}), "255.1.16.255");
 	}
 	
 	@Test
     public void bytesToLongTest() {
         Assert.assertEquals(NumberUtil.bytesToLong((byte)0xff, (byte)0x01, (byte)0x10, (byte)0xff), 0xff1001ffL);
-        Assert.assertEquals(NumberUtil.bytesToLong(new Byte((byte) 0xff), new Byte((byte)0x01), new Byte((byte)0x10), new Byte((byte)0xff)), 0xff1001ffL);
+        Assert.assertEquals(NumberUtil.bytesToLong(Byte.valueOf((byte) 0xff), Byte.valueOf((byte)0x01), Byte.valueOf((byte)0x10), Byte.valueOf((byte)0xff)), 0xff1001ffL);
         Assert.assertEquals(NumberUtil.bytesToLong(new Byte[]{(byte)0xff, (byte)0x01, (byte)0x10, (byte)0xff}), 0xff1001ffL);
     }
 	
