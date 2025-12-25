@@ -1,22 +1,22 @@
 package com.yoloho.enhanced.common.util;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
+import com.alibaba.fastjson2.JSON;
+import com.google.common.collect.Lists;
+import com.yoloho.enhanced.common.util.HttpClientUtil.Callback;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.alibaba.fastjson.JSON;
-import com.google.common.collect.Lists;
-import com.yoloho.enhanced.common.util.HttpClientUtil.Callback;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public class HttpClientUtilTest {
     @SuppressWarnings("unused")
