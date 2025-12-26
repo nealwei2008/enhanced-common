@@ -1,19 +1,22 @@
 package com.yoloho.enhanced.common.util;
 
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public class FileUtil {
-    private static final Logger logger = LoggerFactory.getLogger(FileUtil.class.getSimpleName());
+    private static final Logger logger = LoggerFactory.getLogger(FileUtil.class);
     private final static String resouceFilePrefixOld = "/USER_DIR";
     private final static String resouceFilePrefixNew = "${user_dir}";
     private final static Pattern filenamePattern = Pattern.compile("[0-9a-zA-Z.\\u4e00-\\u9fa5_\\-|\\[\\]=+()@!~`'\":;><,]+$");
@@ -76,21 +79,32 @@ public class FileUtil {
 	 * @return
 	 * @throws FileNotFoundException
 	 */
-	private static File getFile(URL resourceUrl, String description) throws FileNotFoundException {
+	private static File getFile(URL resourceUrl, String description) throws FileNotFoundException, IOException {
         if (resourceUrl == null) {
             return null;
         }
-        if (!"file".equals(resourceUrl.getProtocol())) {
-            throw new FileNotFoundException(
-                    description + " cannot be resolved to absolute file path " +
-                    "because it does not reside in the file system: " + resourceUrl);
-        }
-        try {
-            return new File(toURI(resourceUrl).getSchemeSpecificPart());
-        }
-        catch (URISyntaxException ex) {
-            // Fallback for URLs that are not valid URIs (should hardly ever happen).
-            return new File(resourceUrl.getFile());
+        if ("file".equals(resourceUrl.getProtocol())) {
+            try {
+                return new File(toURI(resourceUrl).getSchemeSpecificPart());
+            }
+            catch (URISyntaxException ex) {
+                // Fallback for URLs that are not valid URIs (should hardly ever happen).
+                return new File(resourceUrl.getFile());
+            }
+        } else {
+            // 非file文件，尝试转存生成临时文件
+            File tempFile = File.createTempFile("temp", ".tmp");
+            tempFile.deleteOnExit();
+            try (FileOutputStream out = new FileOutputStream(tempFile); 
+                    InputStream inputStream = resourceUrl.openStream();) {
+                byte[] buffer = new byte[8129];
+                int bytesRead;
+                while ((bytesRead = inputStream.read(buffer)) != -1) {
+                    out.write(buffer, 0, bytesRead);
+                }
+            }
+            logger.debug("createTempFile success, oriFile:{}", resourceUrl);
+            return tempFile;
         }
     }
 	
@@ -157,11 +171,15 @@ public class FileUtil {
         ClassLoader cl = getDefaultClassLoader();
         if (!loaded) {
             //try to load from classpath
-            logger.info("重定位失败，尝试从classpath中加载资源: {}", pathReal);
+            logger.info("重定位失败，尝试从classpath中加载资源 pathReal: {}", pathReal);
             try {
+                logger.debug("cl:{}",cl);
                 URL url = (cl != null ? cl.getResource(pathReal) : ClassLoader.getSystemResource(pathReal));
+                logger.debug("cl url:{}",url);
                 if (url != null) {
+                    logger.debug("cl url: protocol:{}, path:{}, authority:{}",url.getProtocol(), url.getPath(), url.getAuthority());
                     file = getFile(url, filename);
+                    logger.debug("cl file: {}",file);
                     if (file != null) {
                         loaded = true;
                         logger.info("尝试从classpath中加载资源成功: {}", pathReal);
@@ -172,10 +190,13 @@ public class FileUtil {
         }
         if (!loaded) {
             try {
-                logger.info("重定位失败，尝试从classpath中加载资源: {}", filename);
+                logger.info("重定位失败，尝试从classpath中加载资源 filename: {}", filename);
                 URL url = (cl != null ? cl.getResource(filename) : ClassLoader.getSystemResource(filename));
+                logger.debug("cl url: {}",url);
                 if (url != null) {
+                    logger.debug("cl url: protocol:{}, path:{}, authority:{}",url.getProtocol(), url.getPath(), url.getAuthority());
                     file = getFile(url, filename);
+                    logger.debug("cl file:{}",file);
                     if (file != null) {
                         loaded = true;
                         logger.info("尝试从classpath中加载资源成功: {}", filename);
