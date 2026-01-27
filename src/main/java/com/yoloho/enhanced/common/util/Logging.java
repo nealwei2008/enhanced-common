@@ -110,9 +110,9 @@ public class Logging {
     }
 
     public static void initLogging(boolean console, boolean file) {
+        if ((!console & !file) || !hasLog4j()) return;
         //for rocketmq
         System.setProperty("rocketmq.client.log.loadconfig", "false");
-        if (!hasLog4j()) return;
         // log必须最先开始判断要不要初始化
         final LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
         final Configuration config = ctx.getConfiguration();
